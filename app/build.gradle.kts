@@ -43,6 +43,12 @@ application {
     mainClass.set("com.lukemcconnell.shoot.messenger.App")
 }
 
+tasks.withType<Jar> {
+    manifest {
+        attributes["Main-Class"] = "com.lukemcconnell.shoot.messenger.App"
+    }
+}
+
 tasks.withType<JavaExec>() {
     standardInput = System.`in`
 }
