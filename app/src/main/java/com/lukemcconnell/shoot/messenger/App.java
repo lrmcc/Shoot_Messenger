@@ -35,6 +35,16 @@ public class App {
         String[] userInputArr = getUserInputStr();
         String username =  userInputArr[0];
         String mode =  userInputArr[1];
+        String hostname = "Shoot";
+        int port = 5050;
         System.out.println(username + " selected " + mode + " mode!");
+        if (mode.equals("server")) {
+            ShootServer shootServer = new ShootServer(hostname, port);
+            shootServer.start();
+        }
+        if (mode.equals("client")) {
+            ShootClient shootClient = new ShootClient(hostname, port);
+            shootClient.start();
+        }
     }
 }
