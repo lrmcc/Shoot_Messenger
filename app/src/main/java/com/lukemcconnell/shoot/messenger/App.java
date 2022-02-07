@@ -1,50 +1,57 @@
 /*
-  Shoot Messenger
-  Luke McConnell
+ *  Shoot Messenger 0.0.1
+ *  Luke McConnell
 */
 
 package com.lukemcconnell.shoot.messenger;
 
-import java.util.Scanner; 
+import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Scanner;
+
 public class App {
-    public String getGreeting() {
-        return "Welcome to Shoot Messenger!";
+    
+    public static void getGreeting() {
+        System.out.println("Welcome to Shoot Messenger!");
     }
 
-    public static String[] getUserInputStr() {
-        String[] varNames = {"username", "mode"};
-        Scanner scanner = new Scanner(System.in);  // Create a Scanner object
-        String[] userInputArr = new String[2];
-        userInputArr[0] = null;
-        userInputArr[1] = null;
-        for (int i = 0; i < varNames.length; i++) {
-            System.out.println("Enter " + varNames[i] + ": ");
-            while(userInputArr[i] == null){
-                if (scanner.hasNextLine()){
-                    userInputArr[i] = scanner.nextLine();
-                }
-            }
+    public static ArrayList<String> getUserProfile(Scanner scanner, ArrayList<String> varNames) {
+        ArrayList<String> userProfileArr = new ArrayList<String>();
+        for (int i = 0; i < varNames.size(); i++) {
+            String varName = varNames.get(i);
+            userProfileArr.add(getUserCliInput(scanner, varName) );
         } 
-        scanner.close();
-        return userInputArr;
+        return userProfileArr;
       }
 
+    public static String getUserCliInput(Scanner scanner, String varName) {
+        System.out.println("Enter " + varName + ": ");
+        while (true) { // what should be the while condition?
+            if (scanner.hasNextLine()) {
+                return scanner.nextLine();
+            }
+        }
+    }
+
     public static void main(String[] args) {
-        App messenger = new App();
-        System.out.println(messenger.getGreeting());
-        String[] userInputArr = getUserInputStr();
-        String username =  userInputArr[0];
-        String mode =  userInputArr[1];
-        String hostname = "Shoot";
+        ArrayList<String> varNames = new ArrayList<String>(
+            Arrays.asList("username", "mode"));
+        App.getGreeting();
+        Scanner scanner = new Scanner(System.in);
+        ArrayList<String> userProfileArr = getUserProfile(scanner, varNames);
+        String username = userProfileArr.get(0);
+        String mode = userProfileArr.get(1);
+        String hostname = "localhost";
         int port = 5050;
         System.out.println(username + " selected " + mode + " mode!");
         if (mode.equals("server")) {
             ShootServer shootServer = new ShootServer(hostname, port);
-            shootServer.start();
+            shootServer.start(port);
         }
         if (mode.equals("client")) {
-            ShootClient shootClient = new ShootClient(hostname, port);
-            shootClient.start();
+            ShootClient shootClient = new ShootClient();
+            shootClient.start(hostname, port);
         }
+        scanner.close();
     }
 }
