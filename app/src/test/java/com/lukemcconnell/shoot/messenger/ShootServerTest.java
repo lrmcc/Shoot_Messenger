@@ -9,8 +9,12 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ShootServerTest {
-    // @Test void serverHasAGreeting() {
-    //     ShootServer classUnderTest = new ShootServer("test", 5050);
-    //     assertNotNull(classUnderTest.getGreeting(), "app should have a greeting");
-    // }
+    @Test void serverObjectTypeTest() {
+        String hostname = "localhost";
+        int port = 5050;
+        ShootServer shootServerTest = new ShootServer(hostname, port);
+        String shootServerTestType = shootServerTest.getClass().getName();
+        System.out.println("shootServerTest.getClass().getName(): " + shootServerTestType);
+        assertSame(shootServerTestType, shootServerTest.getClass().getName());
+    }
 }

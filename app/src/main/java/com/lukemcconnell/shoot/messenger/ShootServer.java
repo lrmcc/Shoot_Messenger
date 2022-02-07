@@ -9,29 +9,26 @@ import java.io.*;
 import java.net.*;
 
 public class ShootServer {
-    
-    String hostname;
-    int port;  
+
+    private String hostname;
+    private int port;
 
     public ShootServer(String HOSTNAME, int PORT) {
-        hostname = HOSTNAME;
-        port = PORT;  
-    }
-    
-    public void start(int port) {
-        System.out.println("ShootServer is starting!");
-    
-            int portNumber = port;
-            boolean listening = true;
-            
-            try (ServerSocket serverSocket = new ServerSocket(portNumber)) { 
-                while (listening) {
-                    new Thread(new ShootServerThread(serverSocket.accept())).start();
-                }
-            } catch (IOException e) {
-                System.err.println("Could not listen on port " + portNumber);
-                System.exit(-1);
-            }
-        }
+        this.hostname = HOSTNAME;
+        this.port = PORT;
     }
 
+    public void start() {
+        System.out.println("ShootServer is starting!");
+
+        boolean listening = true;
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
+            while (listening) {
+                new Thread(new ShootServerThread(serverSocket.accept())).start();
+            }
+        } catch (IOException e) {
+            System.err.println("Could not listen on port " + port);
+            System.exit(-1);
+        }
+    }
+}
