@@ -10,11 +10,9 @@ import java.net.*;
 
 public class ShootServer {
 
-    private String hostname;
     private int port;
 
     public ShootServer(String HOSTNAME, int PORT) {
-        this.hostname = HOSTNAME;
         this.port = PORT;
     }
 
