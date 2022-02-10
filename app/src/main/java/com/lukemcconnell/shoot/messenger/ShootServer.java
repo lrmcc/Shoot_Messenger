@@ -5,15 +5,21 @@
 
 package com.lukemcconnell.shoot.messenger;
 
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.util.HashMap;
 
 public class ShootServer {
 
     private int port;
+    private static HashMap<String, ShootClient> clients = new HashMap<String, ShootClient>();
 
     public ShootServer(String HOSTNAME, int PORT) {
         this.port = PORT;
+    }
+
+    void addClient(ShootClient client){
+        clients.put(client.getUsername(), client);
     }
 
     public void start() {

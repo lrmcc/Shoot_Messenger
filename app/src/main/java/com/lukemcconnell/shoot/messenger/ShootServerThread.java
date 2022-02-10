@@ -5,8 +5,11 @@
 
 package com.lukemcconnell.shoot.messenger;
 
-import java.net.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 
 public class ShootServerThread implements Runnable {
     private Socket socket = null;
@@ -15,25 +18,42 @@ public class ShootServerThread implements Runnable {
         this.socket = socket;
     }
 
+    String response(String input) {
+        System.out.println("Server received: " + input);
+        String response = parseInput(input);
+        return response;
+    }
+
+    String parseInput(String input){
+        if (input.equals("--exit")){
+            return "Disconnecting client from server";
+        }
+        return "";
+    }
+
+    static String[] login(String input) {
+        System.out.println("Server received: " + input);
+        return input.split("::::", 3);
+    }
+
     public void run() {
         try (
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(
                                 socket.getInputStream()));
             ) {
-            String inputLine, outputLine;
-            outputLine = ShootProtocol.response(null);
-            out.println(outputLine);
-                                    
+            
+            String inputLine, outputLine; 
             while ((inputLine = in.readLine()) != null) {
-                outputLine = ShootProtocol.response(inputLine);
+                outputLine = response(inputLine);
                 out.println(outputLine);
                 if (outputLine.equals("Disconnecting client from server")){
                     break;
                 }
             }
-            //socket.close();
+
         } catch (IOException e) {
+            System.out.println("ShootServerThreadError");
             e.printStackTrace();
         }
     }

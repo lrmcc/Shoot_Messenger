@@ -10,30 +10,44 @@ import java.net.*;
 
 public class ShootClient {
 
-    private String hostname;
+    private String hostname, username, userId, userComputer;
     private int port;
-    private boolean clientStatus;
-    
+    private boolean status;
+
     public ShootClient(String HOSTNAME, int PORT) {
         this.hostname = HOSTNAME;
         this.port = PORT;
-        this.clientStatus = true;
+        this.status = true;
     }
 
-    public void start() {
+    public boolean getStatus() {
+        return this.status;
+    }
+    public String getUsername() {
+        return this.username;
+    }
+
+    void clientLogin(BufferedReader stdIn, PrintWriter out){
+        this.username = ShootUtils.getInput("username", stdIn);
+        this.userId = ShootUtils.getRandomStr();
+        this.userComputer = ShootUtils.getHostName();
+        out.println(username + "::::" + userId + "::::" + userComputer + "::::");
+    }
+
+    void start() {
         System.out.println("ShootClient is starting!");
 
-        try ( // try-with-resources to ensure each resource closed at end of statement
+        try (
                 Socket shootSocket = new Socket(hostname, port);
                 PrintWriter out = new PrintWriter(shootSocket.getOutputStream(), true);
-                BufferedReader in = new BufferedReader(
-                        new InputStreamReader(shootSocket.getInputStream()));) {
+                BufferedReader in = new BufferedReader(new InputStreamReader(shootSocket.getInputStream()));) {
             BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-            String fromServer;
-            String fromUser;
+            
+            clientLogin(stdIn, out);
 
-            while (clientStatus) {
-                if ((fromServer = in.readLine()) != null) {
+            String fromServer, fromUser;
+            while (status) {
+                if ((fromServer = in.readLine()).length() != 0) {
                     if (fromServer.equals("Disconnecting client from server"))
                         break;
                     System.out.println("Server: " + fromServer);
@@ -48,8 +62,7 @@ public class ShootClient {
             System.err.println("Unknown host " + hostname + "/n" + e);
             System.exit(1);
         } catch (IOException e) {
-            System.err.println("I/O exception for the connection to " +
-                    hostname + "/n" + e);
+            System.err.println("I/O exception for the connection to " + hostname + "/n" + e);
             System.exit(1);
         }
     }
