@@ -12,14 +12,23 @@ import java.util.HashMap;
 public class ShootServer {
 
     private int port;
-    private static HashMap<String, ShootClient> clients = new HashMap<String, ShootClient>();
+    private static HashMap<String, ShootServerThread> shootServerThreads = new HashMap<String, ShootServerThread>();
 
     public ShootServer(String HOSTNAME, int PORT) {
         this.port = PORT;
     }
 
-    void addClient(ShootClient client){
-        clients.put(client.getUsername(), client);
+    private HashMap<String, ShootServerThread> getShootServerThreads(){
+        return shootServerThreads;
+    }
+
+    private String getClientId(ShootServerThread connection){
+        return connection.getUserInfo(1);
+    }
+
+
+    void registerThread(ShootServerThread shootServerThread){
+        shootServerThreads.put(getClientId(shootServerThread), shootServerThread);
     }
 
     public void start() {
@@ -28,7 +37,10 @@ public class ShootServer {
         boolean listening = true;
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             while (listening) {
-                new Thread(new ShootServerThread(serverSocket.accept())).start();
+                ShootServerThread shootserverThread = new ShootServerThread(serverSocket.accept());
+                Thread thread = new Thread(shootserverThread);
+                thread.start();
+                registerThread(shootserverThread);
             }
         } catch (IOException e) {
             System.err.println("Could not listen on port " + port);

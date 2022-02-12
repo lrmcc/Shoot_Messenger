@@ -12,26 +12,30 @@ public class ShootClient {
 
     private String hostname, username, userId, userComputer;
     private int port;
-    private boolean status;
+    private boolean status, loggedIn;
+    private String splitMarker = "::::";
 
     public ShootClient(String HOSTNAME, int PORT) {
         this.hostname = HOSTNAME;
         this.port = PORT;
         this.status = true;
+        this.loggedIn = false;
     }
 
     public boolean getStatus() {
         return this.status;
     }
+
     public String getUsername() {
         return this.username;
     }
 
-    void clientLogin(BufferedReader stdIn, PrintWriter out){
-        this.username = ShootUtils.getInput("username", stdIn);
+
+    String clientLogin(String username) {
+        this.username = username;
         this.userId = ShootUtils.getRandomStr();
         this.userComputer = ShootUtils.getHostName();
-        out.println(username + "::::" + userId + "::::" + userComputer + "::::");
+        return username + splitMarker + userId + splitMarker + userComputer;
     }
 
     void start() {
@@ -40,23 +44,35 @@ public class ShootClient {
         try (
                 Socket shootSocket = new Socket(hostname, port);
                 PrintWriter out = new PrintWriter(shootSocket.getOutputStream(), true);
-                BufferedReader in = new BufferedReader(new InputStreamReader(shootSocket.getInputStream()));) {
-            BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-            
-            clientLogin(stdIn, out);
+                BufferedReader in = new BufferedReader(new InputStreamReader(shootSocket.getInputStream()));
+                BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
+                ) {
 
-            String fromServer, fromUser;
+            String serverResponse, userInput;
             while (status) {
-                if ((fromServer = in.readLine()).length() != 0) {
-                    if (fromServer.equals("Disconnecting client from server"))
+                if (!loggedIn){
+                    String username = ShootUtils.getInput("username", stdIn);
+                    out.println(clientLogin(username));
+                    this.loggedIn = true;
+                }
+                while ((serverResponse = in.readLine()) != null){
+                    String sender = ShootUtils.getStrFromSplit(serverResponse, 0);
+                    String response = ShootUtils.getStrFromSplit(serverResponse, 1);
+                    if (!(response.equals("none"))){
+                        System.out.println(sender + ": " + response);
+                    }
+                    if (response.equals("Disconnecting client from server"))
                         break;
-                    System.out.println("Server: " + fromServer);
-                }
-                fromUser = stdIn.readLine();
-                if (fromUser != null) {
-                    System.out.println("Client: " + fromUser);
-                    out.println(fromUser);
-                }
+
+                    if ((userInput = stdIn.readLine()) != null) {
+                        if (userInput.equals("--exitz")){
+                            System.out.println("ShootClient exiting!");
+                        };
+                        System.out.println("Client: " + userInput);
+                        out.println(userInput);
+                    }
+                    
+                }               
             }
         } catch (UnknownHostException e) {
             System.err.println("Unknown host " + hostname + "/n" + e);

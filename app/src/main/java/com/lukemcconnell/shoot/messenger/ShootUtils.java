@@ -6,6 +6,16 @@ import java.net.InetAddress;
 
 public class ShootUtils {
 
+    public static String getStrFromSplit(String str, int idx){
+        String splitStr = "";
+        try{
+            splitStr = str.split("::::")[idx];
+        }catch (ArrayIndexOutOfBoundsException e){
+            e.printStackTrace();
+        }
+        return splitStr;
+    }
+
     public static String getRandomStr() {
         Random generator = new Random(System.nanoTime());
         double random1 = generator.nextDouble();

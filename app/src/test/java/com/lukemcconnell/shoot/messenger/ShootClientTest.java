@@ -9,12 +9,19 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ShootClientTest {
-    // @Test void serverObjectTypeTest() {
-    //     String hostname = "localhost";
-    //     int port = 5050;
-    //     ShootClient shootClientTest = new ShootClient(hostname, port);
-    //     String shootClientTestType = shootClientTest.getClass().getName();
-    //     System.out.println("shootServerTest.getClass().getName(): " + shootClientTestType);
-    //     assertSame(shootClientTestType, shootClientTest.getClass().getName());
-    // }
+
+    private static ShootClient shootClientTest = new ShootClient("localhost", 5050);
+
+    @Test
+    void shootClientStatusTest() {
+        assertTrue(shootClientTest.getStatus());
+    }
+
+    @Test void shootClientLoginTest(){
+        String[] loginTestArr = {"Luke", "e70357", "Lukes-Mac-mini.local"};
+        String loginStrActual = shootClientTest.clientLogin("Luke");
+        String[] loginStrActualArr = loginStrActual.split("::::");
+        assertEquals(loginStrActualArr[0], loginTestArr[0]);
+        assertEquals(loginStrActualArr[2], loginTestArr[2]);
+    }
 }
