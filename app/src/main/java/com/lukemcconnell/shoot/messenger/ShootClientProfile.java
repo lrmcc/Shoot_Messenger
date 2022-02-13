@@ -10,25 +10,25 @@ import java.util.ArrayList;
 
 public class ShootClientProfile {
 
-    HashMap<String, ArrayList<String>> loadState(String statePath) {
-        //HashMap<String, ArrayList<String>> state = load(statePath);
-        HashMap<String, ArrayList<String>> state = new HashMap<String, ArrayList<String>>();
-        return state;
-    }
+    // HashMap<String, ArrayList<String>> loadState(String statePath) {
+    //     //HashMap<String, ArrayList<String>> state = load(statePath);
+    //     HashMap<String, ArrayList<String>> state = new HashMap<String, ArrayList<String>>();
+    //     return state;
+    // }
 
-    HashMap<String, ArrayList<String>> updateState(HashMap<String, ArrayList<String>> state, String stateArr,  int stateArrIdx, String stateArrValUpdate) {
-        ArrayList<String> stateArrUpdate = state.get(stateArr);
-        stateArrUpdate.set(stateArrIdx, stateArrValUpdate);
-        state.put(stateArr, stateArrUpdate);
-        return state;
-    }
+    // HashMap<String, ArrayList<String>> updateState(HashMap<String, ArrayList<String>> state, String stateArr,  int stateArrIdx, String stateArrValUpdate) {
+    //     ArrayList<String> stateArrUpdate = state.get(stateArr);
+    //     stateArrUpdate.set(stateArrIdx, stateArrValUpdate);
+    //     state.put(stateArr, stateArrUpdate);
+    //     return state;
+    // }
 
     public static HashMap<String, ArrayList<String>> initState() {
         HashMap<String, ArrayList<String>> state = new HashMap<String, ArrayList<String>>();
-        ArrayList<String> client = new ArrayList<String>();
-        ArrayList<String> session = new ArrayList<String>();
-        ArrayList<String> account = new ArrayList<String>();
-        ArrayList<String> settings = new ArrayList<String>();
+        // ArrayList<String> client = new ArrayList<String>();
+        // ArrayList<String> session = new ArrayList<String>();
+        // ArrayList<String> account = new ArrayList<String>();
+        // ArrayList<String> settings = new ArrayList<String>();
         /* 
             HashMap<String, ArrayList<String>> state = {
             "client": [username, user_id, registered],

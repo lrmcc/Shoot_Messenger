@@ -19,7 +19,7 @@ public class ShootClientTest {
 
     @Test void shootClientLoginTest(){
         String[] loginTestArr = {"Luke", "e70357", "Lukes-Mac-mini.local"};
-        String loginStrActual = shootClientTest.clientLogin("Luke");
+        String loginStrActual = shootClientTest.login("Luke");
         String[] loginStrActualArr = loginStrActual.split("::::");
         assertEquals(loginStrActualArr[0], loginTestArr[0]);
         assertEquals(loginStrActualArr[2], loginTestArr[2]);

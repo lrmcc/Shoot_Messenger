@@ -13,8 +13,28 @@ public class ShootClient {
     private String hostname, username, userId, userComputer;
     private int port;
     private boolean status, loggedIn;
-    private String splitMarker = "::::";
 
+    /**
+     * Returns boolean status of the client
+     * @return
+     */
+    public boolean getStatus() {
+        return this.status;
+    }
+
+    /**
+     * Returns the username of the client
+     * @return
+     */
+    public String getUsername() {
+        return this.username;
+    }
+
+    /**
+     * Constructor initializes instance attributes with hostname and port parameters passed
+     * @param HOSTNAME
+     * @param PORT
+     */
     public ShootClient(String HOSTNAME, int PORT) {
         this.hostname = HOSTNAME;
         this.port = PORT;
@@ -22,22 +42,46 @@ public class ShootClient {
         this.loggedIn = false;
     }
 
-    public boolean getStatus() {
-        return this.status;
+    /**
+     * Constructor initializes instance attributes with no passed parameters
+     * @param HOSTNAME
+     * @param PORT
+     */
+    public ShootClient() {
+        this.hostname = ShootUtils.hostname;
+        this.port = ShootUtils.port;
+        this.status = true;
+        this.loggedIn = false;
     }
 
-    public String getUsername() {
-        return this.username;
-    }
-
-
-    String clientLogin(String username) {
+    /**
+     * Sets client attributes for logging in.
+     * Returns formatted string for server consumption.
+     * @param username
+     * @return
+     */
+    String login(String username) {
         this.username = username;
         this.userId = ShootUtils.getRandomStr();
         this.userComputer = ShootUtils.getHostName();
-        return username + splitMarker + userId + splitMarker + userComputer;
+        return username + ShootUtils.splitMarker + userId + ShootUtils.splitMarker + userComputer;
+    }   
+
+    /**
+     * Parses client message for valid commands
+     * @param input
+     * @return
+     */
+    String parseInput(String input) {
+        if (input.equals("exit")) {
+            return "Disconnecting client from server";
+        }
+        return input + " is an invalid flag";
     }
 
+    /**
+     * ShootClient main instance function
+     */
     void start() {
         System.out.println("ShootClient is starting!");
 
@@ -52,7 +96,7 @@ public class ShootClient {
             while (status) {
                 if (!loggedIn){
                     String username = ShootUtils.getInput("username", stdIn);
-                    out.println(clientLogin(username));
+                    out.println(login(username));
                     this.loggedIn = true;
                 }
                 while ((serverResponse = in.readLine()) != null){
@@ -65,9 +109,10 @@ public class ShootClient {
                         break;
 
                     if ((userInput = stdIn.readLine()) != null) {
-                        if (userInput.equals("--exitz")){
-                            System.out.println("ShootClient exiting!");
-                        };
+                        if (userInput.substring(0, 2).equals("--")) {
+                            userInput = parseInput(userInput.substring(2));
+                        }
+                        
                         System.out.println("Client: " + userInput);
                         out.println(userInput);
                     }
@@ -82,4 +127,10 @@ public class ShootClient {
             System.exit(1);
         }
     }
+
+    void exit(){
+        System.out.println("ShootClient exiting!");
+        System.exit(0);
+    }
+
 }

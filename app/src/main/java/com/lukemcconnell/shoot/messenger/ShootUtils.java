@@ -6,16 +6,30 @@ import java.net.InetAddress;
 
 public class ShootUtils {
 
+    public static final String hostname = "localhost";
+    public static final int port = 5050;
+    public static final String splitMarker = "::::";
+
+    /**
+     * Splits the string parameter 
+     * @param str
+     * @param idx
+     * @return
+     */
     public static String getStrFromSplit(String str, int idx){
         String splitStr = "";
         try{
-            splitStr = str.split("::::")[idx];
+            splitStr = str.split(splitMarker)[idx];
         }catch (ArrayIndexOutOfBoundsException e){
             e.printStackTrace();
         }
         return splitStr;
     }
 
+    /**
+     * Returns a 6 character string composed of 3 hex numbers followed by 3 alphabet characters
+     * @return
+     */
     public static String getRandomStr() {
         Random generator = new Random(System.nanoTime());
         double random1 = generator.nextDouble();
@@ -25,6 +39,10 @@ public class ShootUtils {
         return part1 + part2;
     }
 
+    /**
+     * Returns the local host computer name
+     * @return
+     */
     static String getHostName() {
         String localHostName = "";
         try {
@@ -36,6 +54,13 @@ public class ShootUtils {
         return localHostName;
     }
 
+    /**
+     * Takes in an variable name (user to be prompted for input for varName) and an input stream
+     * Returns String value meant to represent varName's value
+     * @param varName
+     * @param in
+     * @return
+     */
     public static String getInput(String varName, BufferedReader in) {
         String input = "";
         try {
