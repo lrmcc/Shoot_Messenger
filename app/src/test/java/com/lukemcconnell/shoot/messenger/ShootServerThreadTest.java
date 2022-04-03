@@ -5,18 +5,18 @@
 
 package com.lukemcconnell.shoot.messenger;
 
-import java.io.*;
 import java.net.*;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ShootServerThreadTest {
-    @Test void serverThreadObjectTypeTest() {
-        Socket socket = null;
+    @Test void serverThreadLoginTest() {
+        Socket socket = new Socket();
         ShootServerThread shootServerThreadTest = new ShootServerThread(socket);
-        String serverThreadTestType = shootServerThreadTest.getClass().getName();
-        System.out.println("serverThreadTestType.getClass().getName(): " + serverThreadTestType);
-        assertSame(serverThreadTestType, shootServerThreadTest.getClass().getName());
+        String loginStrTest = "Luke::::e70357::::Lukes-Mac-mini.local";
+        String[] loginTestArr = {"Luke", "e70357", "Lukes-Mac-mini.local"};
+        assertEquals(shootServerThreadTest.login(loginStrTest)[0], loginTestArr[0]);
+        assertEquals(shootServerThreadTest.login(loginStrTest)[2], loginTestArr[2]);
     }
 }
