@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class ShootServerThread implements Runnable {
+class ShootServerThread implements Runnable {
 
     private Socket socket;
     private boolean status = false;
@@ -20,54 +20,55 @@ public class ShootServerThread implements Runnable {
     private String serverName = "Server";
 
     /**
-     * Returns the ShootServerThread objects's socket object
+     * Constructor sets instance socket to the socket object 
+     * returned from ServerSocket serverSocket.accept().
+     * @param socket
+     */
+    ShootServerThread(Socket sock) {
+        socket = sock;
+        status = true;
+    }
+
+    /**
+     * Returns the ShootServerThread objects's socket object.
      * @return
      */
-    public Socket getSocket(){
+    Socket getSocket(){
         return this.socket;
     }
 
-    public boolean getStatus(){
+    boolean getStatus(){
         return this.status;
     }
 
     /**
-     * Returns boolean value indicating if the client has loggedIn
+     * Returns boolean value indicating if the client has loggedIn.
      * @return
      */
-    public boolean getLoggedIn(){
+    boolean getLoggedIn(){
         return this.loggedIn;
     }
 
     /**
-     * Returns String array of client user info
+     * Returns String array of client user info.
      * @return
      */
-    public String[] getClientInfo(){
+    String[] getClientInfo(){
         return this.userInfo;
     }
 
     /**
-     * 
-     * Given an index, returns String element of user info String array
+     * Given an index, returns String element of user info String array.
      * @param idx
      * @return
      */
-    public String getClientInfo(int idx){
+    String getClientInfo(int idx){
         return this.userInfo[idx];
     }
 
+    
     /**
-     * Constructor sets instance socket to the socket object returned from ServerSocket serverSocket.accept()
-     * @param socket
-     */
-    public ShootServerThread(Socket socket) {
-        this.socket = socket;
-        this.status = true;
-    }
-
-    /**
-     * Returns a String based on server evaluating client message
+     * Returns a String based on server evaluating client message.
      * @param input
      * @return
      */
@@ -85,7 +86,7 @@ public class ShootServerThread implements Runnable {
     }
 
     /**
-     * Parses client message for valid commands
+     * Parses client message for valid commands.
      * @param input
      * @return
      */
@@ -93,7 +94,7 @@ public class ShootServerThread implements Runnable {
         String parseResponse = "";
         System.out.println("parseInput(String input), input: " + input);
         if (input.equals("users")) {
-            parseResponse = ShootServer.getCurrentUsernames();
+            //parseResponse = ShootServer.getCurrentUsernames();
         }
         else if (input.equals("exit")) {
             parseResponse = "Disconnecting client from server";
@@ -106,18 +107,18 @@ public class ShootServerThread implements Runnable {
 
     /**
      * Takes in client info string and splits into array.
-     * Returns String array of client info 
+     * Returns String array of client info.
      * @param input
      * @return
      */
     String[] login(String input) {
         this.loggedIn = true;
-        this.userInfo = input.split(ShootUtils.splitMarker);
+        this.userInfo = input.split(ShootUtils.SPLITMARKER);
         return getClientInfo();
     }
 
     /**
-     * ShootServerThread main instace function 
+     * ShootServerThread main instace function.
      */
     public void run() {
         try (
@@ -134,7 +135,7 @@ public class ShootServerThread implements Runnable {
                     this.status = false;
                     break;
                 }
-                outputLine = serverName + ShootUtils.splitMarker + response;
+                outputLine = serverName + ShootUtils.SPLITMARKER + response;
                 System.out.println("Server response: " + outputLine);
                 out.println(outputLine);
             }

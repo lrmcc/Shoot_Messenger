@@ -10,9 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ShootServerTest {
     @Test void serverObjectTypeTest() {
-        String hostname = "localhost";
-        int port = 5050;
-        ShootServer shootServerTest = new ShootServer(hostname, port);
+        ShootServer shootServerTest = new ShootServer();
         String shootServerTestType = shootServerTest.getClass().getName();
         System.out.println("shootServerTest.getClass().getName(): " + shootServerTestType);
         assertSame(shootServerTestType, shootServerTest.getClass().getName());
