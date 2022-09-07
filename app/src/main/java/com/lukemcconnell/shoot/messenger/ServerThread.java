@@ -17,6 +17,8 @@ import java.net.Socket;
 class ServerThread implements Runnable {
 
     private Socket socket;
+    private PrintWriter clientWriter;
+    private BufferedReader serverReader;
     private boolean loggedIn = false;
     private String[] userInfo = new String[3];
 
@@ -64,11 +66,26 @@ class ServerThread implements Runnable {
      * @param input
      * @throws IOException
      */
-    void login(BufferedReader socketIn, PrintWriter socketOut) throws IOException {
-        userInfo = socketIn.readLine().split(ShootUtils.SPLITMARKER);
-        socketOut.println("Welcome " + userInfo[0] +"! Connected users are: " + ShootServer.connectedUsers());
-        System.out.println(userInfo[0] + " has connected to the server");
+    void logIn() throws IOException {
         loggedIn = true;
+        userInfo = serverReader.readLine().split(ShootUtils.SPLITMARKER);
+        System.out.println("ServerThread login(): " + userInfo[0] + " has connected to the server");
+    }
+
+    /**
+     * 
+     */
+    void logOut() {
+        loggedIn = false;
+    }
+
+    void init() throws IOException {
+        clientWriter = new PrintWriter(socket.getOutputStream(), true); // outgoing to client
+        serverReader = new BufferedReader(new InputStreamReader(socket.getInputStream())); //incoming from client
+    }
+
+    void send(String serverMessage) {
+        clientWriter.println(serverMessage);
     }
 
     /**
@@ -76,26 +93,23 @@ class ServerThread implements Runnable {
      * 
      */
     public void run() {
-        System.out.println("ServerThread running");
-        try (
-            PrintWriter socketOut = new PrintWriter(socket.getOutputStream(), true); // outgoing to client
-            BufferedReader socketIn = new BufferedReader(new InputStreamReader(socket.getInputStream())); //incoming from client
-            ) {
+        try {
+            init();
+            logIn();
+            clientWriter.println("\nWelcome " + userInfo[0] + "!\n" + ShootServer.SERVER_INFO + "\n" + ShootServer.connectedUsers());
             String userInput;
-            String serverOutput;
-            login(socketIn, socketOut);
-            System.out.println("ServerThread after login");
-            while (loggedIn && (userInput = socketIn.readLine()) != null) {
+            while (loggedIn && (userInput = serverReader.readLine()) != null) {
                 System.out.println("Server Thread received: " + userInput);
-                String response = ShootServer.evaluate(userInput);
-                if (response.equals("exit")) break;
-                serverOutput = "Server" + ShootUtils.SPLITMARKER + response;
-                System.out.println("Server Thread response: " + serverOutput);
-                socketOut.println(serverOutput);
+                clientWriter.println("Server Thread received: " + userInput);
             }
+            if (loggedIn) loggedIn = false;
+            serverReader.close();
+            clientWriter.close();
         } catch (IOException e) {
             System.out.println("ShootServerThreadError");
-            e.printStackTrace();
+            e.printStackTrace(); 
+        } finally {
+            ShootServer.verifyClients();
         }
     }
 }

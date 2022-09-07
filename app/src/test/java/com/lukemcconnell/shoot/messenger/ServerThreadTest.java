@@ -10,7 +10,7 @@ import java.net.*;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ShootServerThreadTest {
+public class ServerThreadTest {
     // @Test void serverThreadLoginTest() {
     //     Socket socket = new Socket();
     //     ShootServerThread shootServerThreadTest = new ShootServerThread(socket);

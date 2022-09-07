@@ -19,21 +19,17 @@ public class ClientThread implements Runnable {
         socket = sock;
     }
 
-
     /**
      * ClientThread to handle incoming messenges from server.
      * 
      */
     public void run() {
-        System.out.println("ClientThread running");
         try (
-            // Reader from server.
             BufferedReader socketIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             ) {
-            String serverResponse;
-            System.out.println("ClientThread before loop");
-            while ((serverResponse = socketIn.readLine()) != null) {
-                System.out.println("Client Thread received: " + serverResponse);
+            String messengeFromServer;
+            while ((messengeFromServer = socketIn.readLine()) != null) {
+                System.out.println(messengeFromServer);
             }
         } catch (IOException e) {
             System.out.println("ClientThreadError");

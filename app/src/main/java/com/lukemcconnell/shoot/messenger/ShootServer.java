@@ -15,9 +15,9 @@ import java.util.ArrayList;
  */
 class ShootServer {
 
-    private String localHostName;
     private boolean listening = false;
-    private static volatile ArrayList<ServerThread> serverThreads = new ArrayList<>();
+    private static ArrayList<ServerThread> serverThreads = new ArrayList<>();
+    static final String SERVER_INFO = "ShootServer running on " + ShootUtils.getLocalHostName() + " on domain " + ShootUtils.HOSTNAME + " listening on port " + ShootUtils.PORT;
 
     /**
      * Returns HashMap of active ShootServerThread objects.
@@ -33,7 +33,6 @@ class ShootServer {
      * 
      */
     ShootServer() {
-        localHostName = ShootUtils.getLocalHostName();
         listening = true;
     }
 
@@ -50,6 +49,7 @@ class ShootServer {
      */
     static String connectedUsers(){
         StringBuilder usernames = new StringBuilder();
+        usernames.append(serverThreads.size() + " connected users: ");
         for (ServerThread serverThread: serverThreads){
             usernames.append(serverThread.getClientInfo()[0] + ", ");   
         }
@@ -64,31 +64,18 @@ class ShootServer {
      * 
      * @return
      */
-    static void verifyClients(){
+    static void verifyClients() {
         ArrayList<ServerThread> threadsToRemove = new ArrayList<>();
-        for (ServerThread serverThread : serverThreads) {
-            if (!serverThread.isLoggedIn())
-                threadsToRemove.add(serverThread);
+        synchronized (serverThreads) {
+            for (ServerThread serverThread : serverThreads) {
+                if (!serverThread.isLoggedIn())
+                    threadsToRemove.add(serverThread);
+            }
         }
-        for (int i = 0; i < threadsToRemove.size(); i++){
+        for (int i = 0; i < threadsToRemove.size(); i++) {
             serverThreads.remove(threadsToRemove.get(i));
         }
-        threadsToRemove.clear();
-    }
-
-     /**
-     * Returns a String based on server evaluating client message.
-     * 
-     * @param input
-     * @return
-     */
-    static String evaluate(String input) {
-        String response = null;
-        if (input.equals("exit"))
-            response = "exiting app";
-        else
-            response = "Server received: " + input;
-        return response;
+        threadsToRemove.clear();   
     }
 
     /**
@@ -96,19 +83,14 @@ class ShootServer {
      * 
      */
     void start() {
-        System.out.println("ShootServer is started on " + localHostName);
-
+        System.out.println(SERVER_INFO);
         try (ServerSocket serverSocket = new ServerSocket(ShootUtils.PORT)) {
             while (listening) {
-                System.out.println("ShootServer is listening for connections on port: " + serverSocket.getLocalPort());
                 Socket socket = serverSocket.accept();
-                ServerThread shootServerThread = new ServerThread(socket);
-                Thread thread = new Thread(shootServerThread);
+                ServerThread serverThread = new ServerThread(socket);
+                Thread thread = new Thread(serverThread);
                 thread.start();
-                synchronized (serverThreads) {
-                    serverThreads.add(shootServerThread);
-                }
-                verifyClients();
+                serverThreads.add(serverThread);
             }
         } catch (IOException e) {
             System.err.println("Could not listen on port " + ShootUtils.PORT);
