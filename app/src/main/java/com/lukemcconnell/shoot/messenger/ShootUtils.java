@@ -4,33 +4,54 @@ import java.util.Random;
 import java.io.BufferedReader;
 import java.net.InetAddress;
 
-public class ShootUtils {
+class ShootUtils {
 
-    public static final String hostname = "localhost";
-    public static final int port = 5050;
-    public static final String splitMarker = "::::";
-
+    private static ShootUtils shootUtils = null;
+    static final String HOSTNAME = "localhost";
+    static final int PORT = 5050;
+    static final String SPLITMARKER = "::::";
+    
     /**
-     * Splits the string parameter 
+     * Private ShootUtils constructor for singleton implementation.
+     */
+    private ShootUtils(){}
+    
+    /**
+     * Returns singleton instance of ShootUtils.
+     * @return
+     */
+    static ShootUtils getInstance() {
+        if (shootUtils == null)
+            shootUtils = new ShootUtils();
+        return shootUtils;
+    }
+    
+    /**
+     * Splits the string parameter.
+     * 
      * @param str
      * @param idx
      * @return
      */
-    public static String getStrFromSplit(String str, int idx){
+    static String getStrFromSplit(String str, int idx) {
+        System.out.println("Attempting to split: " + str + " @ index: " + idx);
         String splitStr = "";
-        try{
-            splitStr = str.split(splitMarker)[idx];
-        }catch (ArrayIndexOutOfBoundsException e){
+        try {
+            splitStr = str.split(SPLITMARKER)[idx];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Coudln't split: " + str + " @ index: " + idx);
             e.printStackTrace();
         }
         return splitStr;
     }
 
     /**
-     * Returns a 6 character string composed of 3 hex numbers followed by 3 alphabet characters
+     * Returns a 6 character string composed of 3 hex numbers followed by 3 alphabet
+     * characters.
+     * 
      * @return
      */
-    public static String getRandomStr() {
+    static String getRandomStr() {
         Random generator = new Random(System.nanoTime());
         double random1 = generator.nextDouble();
         String part1 = Integer.toHexString((int) Math.floor(random1 * (3831) + 256));
@@ -40,10 +61,11 @@ public class ShootUtils {
     }
 
     /**
-     * Returns the local host computer name
+     * Returns the local host computer name.
+     * 
      * @return
      */
-    static String getHostName() {
+    static String getLocalHostName() {
         String localHostName = "";
         try {
             InetAddress localHost = InetAddress.getLocalHost();
@@ -55,18 +77,28 @@ public class ShootUtils {
     }
 
     /**
-     * Takes in an variable name (user to be prompted for input for varName) and an input stream
-     * Returns String value meant to represent varName's value
-     * @param varName
+     * Presents prompt to user and returns String value of user input.
+     * 
+     * @param prompt
      * @param in
      * @return
      */
-    public static String getInput(String varName, BufferedReader in) {
+    static String getInput(String prompt, BufferedReader in) {
+        System.out.println(prompt);
+        return getInput(in);
+    }
+
+    /**
+     * Returns String value of user input.
+     * 
+     * @param in
+     * @return
+     */
+    static String getInput(BufferedReader in) {
         String input = "";
         try {
-            System.out.println("Enter " + varName + ": ");
-            while ((input = in.readLine()).length() == 0) { 
-                if (input != null || input.length() != 0) {
+            while ((input = in.readLine()).length() == 0) {
+                if (input.length() != 0) {
                     System.out.println("scanner.hasNextLine()!!!");
                     input = in.readLine();
                     System.out.println("input: " + input);
