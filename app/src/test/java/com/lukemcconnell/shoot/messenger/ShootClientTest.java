@@ -12,10 +12,10 @@ public class ShootClientTest {
 
     private static ShootClient shootClientTest = new ShootClient();
 
-    @Test
-    void shootClientStatusTest() {
-        assertTrue(shootClientTest.getStatus());
-    }
+    // @Test
+    // void shootClientStatusTest() {
+    //     assertTrue(shootClientTest.getStatus());
+    // }
 
     // @Test void shootClientLoginTest(){
     //     String[] loginTestArr = {"Luke", "e70357", "Lukes-Mac-mini.local"};

@@ -34,10 +34,12 @@ class ShootUtils {
      * @return
      */
     static String getStrFromSplit(String str, int idx) {
+        System.out.println("Attempting to split: " + str + " @ index: " + idx);
         String splitStr = "";
         try {
             splitStr = str.split(SPLITMARKER)[idx];
         } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Coudln't split: " + str + " @ index: " + idx);
             e.printStackTrace();
         }
         return splitStr;

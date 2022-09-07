@@ -5,67 +5,90 @@
 
 package com.lukemcconnell.shoot.messenger;
 
-import java.io.*;
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
+/**
+ * ShootServer manages application as a client.
+ */
 class ShootClient {
 
+    private boolean loggedIn;
     private String username;
     private String userId;
-    private boolean status, loggedIn;
+    private String[] userInfo;
+    private String userInfoStr;
 
     /**
      * Creates client object.
      * 
      */
     ShootClient() {
-        this.status = true;
-        this.loggedIn = false;
-    }
-    
-    /**
-     * Returns boolean status of the client.
-     *
-     * @return
-     */
-    boolean getStatus() {
-        return this.status;
+        loggedIn = false;
     }
 
     /**
      * Returns the userId of the client.
+     * 
      * @return
      */
     String getUserId() {
-        return this.userId;
+        return userId;
     }
 
     /**
      * Returns the username of the client.
+     * 
      * @return
      */
     String getUsername() {
-        return this.username;
+        return username;
+    }
+
+    /**
+     * Returns userInfo array.
+     * 
+     * @return
+     */
+    String[] getUserInfo() {
+        return userInfo;
+    }
+    /**
+     * Returns userInfo array formatted into string with split marker.
+     * 
+     * @return
+     */
+    String getUserInfoStr() {
+        return userInfoStr;
     }
 
     /**
      * Sets client attributes for logging in.
      * Returns formatted string for server consumption.
-     * @param username
-     * @return
+     * 
+     * @param stdIn
+     * @throws IOException
      */
-    String login(String username) {
-        this.username = username;
-        this.userId = ShootUtils.getRandomStr();
-        return username + ShootUtils.SPLITMARKER + userId + ShootUtils.SPLITMARKER + ShootUtils.getLocalHostName();
-    }   
+    void initUser(BufferedReader stdIn, PrintWriter socketOut) {
+        username = ShootUtils.getInput("\nEnter a username:", stdIn);
+        userId = ShootUtils.getRandomStr();
+        userInfo = new String[]{username, userId, ShootUtils.getLocalHostName()};
+        userInfoStr = username + ShootUtils.SPLITMARKER + userId + ShootUtils.SPLITMARKER + ShootUtils.getLocalHostName();
+        socketOut.println(userInfoStr);
+        loggedIn = true;
+    }
 
     /**
-     * Parses client message for valid commands.
+     * Evaluates users input for valid messenger commands.
+     * 
      * @param input
      * @return
      */
-    String parseInput(String input) {
+    String evaluateInput(String input) {
         if (input.equals("exit")) {
             return "Disconnecting client from server";
         }
@@ -74,43 +97,35 @@ class ShootClient {
 
     /**
      * ShootClient main instance function.
+     * 
      */
     void start() {
-        System.out.println("ShootClient is starting!");
+        System.out.println("ShootClient started!");
 
         try (
-                Socket shootSocket = new Socket(ShootUtils.HOSTNAME, ShootUtils.PORT);
-                PrintWriter out = new PrintWriter(shootSocket.getOutputStream(), true);
-                BufferedReader in = new BufferedReader(new InputStreamReader(shootSocket.getInputStream()));
-                BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-                ) {
+            // Socket connection to server.
+            Socket socket = new Socket(ShootUtils.HOSTNAME, ShootUtils.PORT);
+            // Reader from user.
+            BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
+            // Writer to server.
+            PrintWriter socketOut = new PrintWriter(socket.getOutputStream(), true);
+            ) {
+            
+            initUser(stdIn, socketOut);
+            System.out.println("After initUser() before ClientThread.start");
 
-            String serverResponse, userInput;
-            while (status) {
-                if (!loggedIn){
-                    String username = ShootUtils.getInput("\nEnter a username:", stdIn);
-                    out.println(login(username));
-                    this.loggedIn = true;
-                }
-                while ((serverResponse = in.readLine()) != null){
-                    String sender = ShootUtils.getStrFromSplit(serverResponse, 0);
-                    String response = ShootUtils.getStrFromSplit(serverResponse, 1);
-                    if (!(response.equals("none"))){
-                        System.out.println(sender + ": " + response);
-                    }
-                    if (response.equals("Disconnecting client from server"))
-                        break;
-
-                    if ((userInput = stdIn.readLine()) != null) {
-                        if (userInput.substring(0, 2).equals("--")) {
-                            userInput = parseInput(userInput.substring(2));
-                        }
-                        
-                        System.out.println("Client: " + userInput);
-                        out.println(userInput);
-                    }
-                    
-                }               
+            ClientThread clientThread = new ClientThread(socket);
+            Thread thread = new Thread(clientThread);
+            thread.start();
+            
+            String userInput;
+            while (loggedIn && (userInput = stdIn.readLine()) != null) {
+                System.out.println("ShootClient user sent: " + userInput);
+                // if (userInput.substring(0, 2).equals("--")) {
+                //     userInput = evaluateInput(userInput.substring(2));
+                // }
+                // System.out.println("Client: " + userInput);
+                socketOut.println(userInput);
             }
         } catch (UnknownHostException e) {
             System.err.println("Unknown host " + ShootUtils.HOSTNAME + "/n" + e);
@@ -118,7 +133,7 @@ class ShootClient {
         } catch (IOException e) {
             System.err.println("I/O exception for the connection to " + ShootUtils.HOSTNAME + "/n" + e);
             System.exit(1);
-        }
+        } 
     }
 
     void exit() {

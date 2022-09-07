@@ -8,7 +8,7 @@ package com.lukemcconnell.shoot.messenger;
 import java.util.HashMap;
 import java.util.ArrayList;
 
-class ShootClientProfile {
+class ClientProfile {
 
     // HashMap<String, ArrayList<String>> loadState(String statePath) {
     //     //HashMap<String, ArrayList<String>> state = load(statePath);

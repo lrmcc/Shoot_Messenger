@@ -7,88 +7,111 @@ package com.lukemcconnell.shoot.messenger;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Arrays;
 
+/**
+ * ShootServer manages application as a server.
+ */
 class ShootServer {
 
-    private int port;
     private String localHostName;
     private boolean listening = false;
-    private ArrayList<ShootServerThread> shootServerThreads = new ArrayList<>();
+    private static volatile ArrayList<ServerThread> serverThreads = new ArrayList<>();
 
     /**
      * Returns HashMap of active ShootServerThread objects.
+     * 
      * @return
      */
-    ArrayList<ShootServerThread> getShootServerThreads(){
-        return shootServerThreads;
+    ArrayList<ServerThread> getServerThreads(){
+        return serverThreads;
     }
 
     /**
      * Constructor sets instance port.
+     * 
      */
     ShootServer() {
-        port = ShootUtils.PORT;
         localHostName = ShootUtils.getLocalHostName();
         listening = true;
     }
 
     /**
      * Toggles listening to false, cause server listen loop to exit.
+     * 
      */
     void stopListening(){listening = false;}
     
     /**
      * Returns a formatted String of current users for info output *ADD TIMESTAMP*.
-     * @param shootServerThreads
+     * 
      * @return
      */
-    String getCurrentUsernames(){
+    static String connectedUsers(){
         StringBuilder usernames = new StringBuilder();
-        System.out.println("Number of ShootServerThreads: " + shootServerThreads.size());
-        for (ShootServerThread shootServerThread: shootServerThreads){
-            try{
-                usernames.append("\n" + Arrays.toString(shootServerThread.getClientInfo()) + "\n");
-            } catch(ArrayIndexOutOfBoundsException e){
-                e.printStackTrace();
-                System.out.println("error retrieving username\nverifying all clients are connected\n");
-                shootServerThreads = verifyClients();
-            }
+        for (ServerThread serverThread: serverThreads){
+            usernames.append(serverThread.getClientInfo()[0] + ", ");   
         }
+        if (usernames.length() > 2)
+            usernames.replace(usernames.length()-2, usernames.length()-1, ""); //removes last ', '
         return usernames.toString();
     }
 
     /**
-     * Verifys each ShootServerThread has client with a connected user.
+     * Verifys each ServerThread object has a connected user.
      * Returns ArrayList with invalid threads omitted.
+     * 
      * @return
      */
-    ArrayList<ShootServerThread> verifyClients(){
-        for (ShootServerThread shootServerThread : shootServerThreads) {
-            if (!shootServerThread.getStatus())
-                shootServerThreads.remove(shootServerThread);
-        } 
-        return shootServerThreads;
+    static void verifyClients(){
+        ArrayList<ServerThread> threadsToRemove = new ArrayList<>();
+        for (ServerThread serverThread : serverThreads) {
+            if (!serverThread.isLoggedIn())
+                threadsToRemove.add(serverThread);
+        }
+        for (int i = 0; i < threadsToRemove.size(); i++){
+            serverThreads.remove(threadsToRemove.get(i));
+        }
+        threadsToRemove.clear();
+    }
+
+     /**
+     * Returns a String based on server evaluating client message.
+     * 
+     * @param input
+     * @return
+     */
+    static String evaluate(String input) {
+        String response = null;
+        if (input.equals("exit"))
+            response = "exiting app";
+        else
+            response = "Server received: " + input;
+        return response;
     }
 
     /**
      * ShootServer main instance function for running server.
+     * 
      */
     void start() {
-        System.out.println("ShootServer is starting on " + this.localHostName);
+        System.out.println("ShootServer is started on " + localHostName);
 
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
+        try (ServerSocket serverSocket = new ServerSocket(ShootUtils.PORT)) {
             while (listening) {
-                ShootServerThread shootServerThread = new ShootServerThread(serverSocket.accept());
+                System.out.println("ShootServer is listening for connections on port: " + serverSocket.getLocalPort());
+                Socket socket = serverSocket.accept();
+                ServerThread shootServerThread = new ServerThread(socket);
                 Thread thread = new Thread(shootServerThread);
                 thread.start();
-                shootServerThreads.add(shootServerThread);
-                shootServerThreads = verifyClients();
-                System.out.println("Usernames: " + getCurrentUsernames());
+                synchronized (serverThreads) {
+                    serverThreads.add(shootServerThread);
+                }
+                verifyClients();
             }
         } catch (IOException e) {
-            System.err.println("Could not listen on port " + port);
+            System.err.println("Could not listen on port " + ShootUtils.PORT);
             System.exit(-1);
         }
     }
