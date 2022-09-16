@@ -10,6 +10,8 @@ class ShootUtils {
     static final String HOSTNAME = "localhost";
     static final int PORT = 5050;
     static final String SPLITMARKER = "::::";
+    static final String CONNECTION_INFO = ShootUtils.getLocalHostName() + " connected to " + ShootUtils.HOSTNAME + " on port " + ShootUtils.PORT;
+
     
     /**
      * Private ShootUtils constructor for singleton implementation.

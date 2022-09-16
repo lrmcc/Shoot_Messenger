@@ -19,8 +19,8 @@ class ServerThread implements Runnable {
     private Socket socket;
     private PrintWriter clientWriter;
     private BufferedReader serverReader;
+    private UserProfile userProfile;
     private boolean loggedIn = false;
-    private String[] userInfo = new String[3];
 
     /**
      * Constructor sets instance socket to the socket object 
@@ -30,6 +30,7 @@ class ServerThread implements Runnable {
      */
     ServerThread(Socket sock) {
         socket = sock;
+        userProfile = new UserProfile();
     }
 
     /**
@@ -37,56 +38,35 @@ class ServerThread implements Runnable {
      * 
      * @return
      */
-    Socket getSocket(){
-        return socket;
-    }
+    Socket getSocket() {return socket;}
 
     /**
-     * Returns boolean value indicating if the client has loggedIn.
+     * Returns UserProfile associated with ServerThread
      * 
      * @return
      */
-    boolean isLoggedIn(){
-        return loggedIn;
-    }
+    UserProfile getUserProfile() {return userProfile;}
 
     /**
-     * Returns String array of client user info.
+     * Initializes ServerThread socket writer and reader.
      * 
-     * @return
-     */
-    String[] getClientInfo(){
-        return userInfo;
-    }
-
-    /**
-     * Takes in client info string and splits into array.
-     * Returns String array of client info.
-     * 
-     * @param input
      * @throws IOException
      */
-    void logIn() throws IOException {
-        loggedIn = true;
-        userInfo = serverReader.readLine().split(ShootUtils.SPLITMARKER);
-        System.out.println("ServerThread login(): " + userInfo[0] + " has connected to the server");
-    }
-
-    /**
-     * 
-     */
-    void logOut() {
-        loggedIn = false;
-    }
-
     void init() throws IOException {
         clientWriter = new PrintWriter(socket.getOutputStream(), true); // outgoing to client
         serverReader = new BufferedReader(new InputStreamReader(socket.getInputStream())); //incoming from client
+        userProfile.setLoggedIn(true);
+        userProfile.setUserInfo(serverReader.readLine().split(ShootUtils.SPLITMARKER));
+        System.out.println(userProfile.getUserInfo()[0] + " has connected to the server");
+        clientWriter.println("\nWelcome " + userProfile.getUserInfo()[0] + "!\n" + ShootUtils.CONNECTION_INFO + "\n" + ShootServer.getConnectedUsers());
     }
 
-    void send(String serverMessage) {
-        clientWriter.println(serverMessage);
-    }
+    /**
+     * Sends message from main server thread to client.
+     * 
+     * @param serverMessage
+     */
+    void send(String serverMessage) {clientWriter.println(serverMessage);}
 
     /**
      * ShootServerThread main instace function.
@@ -95,8 +75,6 @@ class ServerThread implements Runnable {
     public void run() {
         try {
             init();
-            logIn();
-            clientWriter.println("\nWelcome " + userInfo[0] + "!\n" + ShootServer.SERVER_INFO + "\n" + ShootServer.connectedUsers());
             String userInput;
             while (loggedIn && (userInput = serverReader.readLine()) != null) {
                 System.out.println("Server Thread received: " + userInput);

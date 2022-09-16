@@ -73,7 +73,7 @@ class ShootClient {
      * @param stdIn
      * @throws IOException
      */
-    void initUser(BufferedReader stdIn, PrintWriter socketOut) {
+    void init(BufferedReader stdIn, PrintWriter socketOut) {
         loggedIn = true;
         username = ShootUtils.getInput("\nEnter a username:", stdIn);
         userId = ShootUtils.getRandomStr();
@@ -87,14 +87,13 @@ class ShootClient {
      * 
      */
     void start() {
-        System.out.println("ShootClient started!");
-
         try (
             Socket socket = new Socket(ShootUtils.HOSTNAME, ShootUtils.PORT);
             BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
             PrintWriter socketOut = new PrintWriter(socket.getOutputStream(), true);
             ) {
-            initUser(stdIn, socketOut);
+            System.out.println("Shoot Client launched from " + ShootUtils.CONNECTION_INFO);    
+            init(stdIn, socketOut);
             ClientThread clientThread = new ClientThread(socket);
             Thread thread = new Thread(clientThread);
             thread.start();

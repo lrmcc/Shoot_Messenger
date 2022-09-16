@@ -5,59 +5,44 @@
 
 package com.lukemcconnell.shoot.messenger;
 
-import java.util.HashMap;
-import java.util.ArrayList;
-
+/**
+ * UserProfile stores user information.
+ */
 class UserProfile {
 
-    // HashMap<String, ArrayList<String>> loadState(String statePath) {
-    //     //HashMap<String, ArrayList<String>> state = load(statePath);
-    //     HashMap<String, ArrayList<String>> state = new HashMap<String, ArrayList<String>>();
-    //     return state;
-    // }
+    private String[] userInfo;
+    private boolean loggedIn;
 
-    // HashMap<String, ArrayList<String>> updateState(HashMap<String, ArrayList<String>> state, String stateArr,  int stateArrIdx, String stateArrValUpdate) {
-    //     ArrayList<String> stateArrUpdate = state.get(stateArr);
-    //     stateArrUpdate.set(stateArrIdx, stateArrValUpdate);
-    //     state.put(stateArr, stateArrUpdate);
-    //     return state;
-    // }
+    /**
+     * UserProfile constructor.
+     * 
+     */
+    UserProfile () {loggedIn = false;}
 
-    static HashMap<String, ArrayList<String>> initState() {
-        HashMap<String, ArrayList<String>> state = new HashMap<String, ArrayList<String>>();
-        // ArrayList<String> client = new ArrayList<String>();
-        // ArrayList<String> session = new ArrayList<String>();
-        // ArrayList<String> account = new ArrayList<String>();
-        // ArrayList<String> settings = new ArrayList<String>();
-        /* 
-            HashMap<String, ArrayList<String>> state = {
-            "client": [username, user_id, registered],
-            "session": [socket_info, client_computer, session_status],
-            "account": [rooms, archive, resources],
-            "settings": [save_mode, encryption, autoload] }
-        */
+    /**
+     * Sets user infomation in string array userInfo.
+     * @param userInfo
+     */
+    void setUserInfo(String[] userInfo) {this.userInfo = userInfo;}
 
-        // client.add(getUsername());
-        // client.add(getUserId());
-        // client.add("false");
-        // state.put("client", client);
+    /**
+     * Returns String array of userInfo.
+     * 
+     * @return
+     */
+    String[] getUserInfo() {return userInfo;}
+    
+    /**
+     * Returns boolean of user login status.
+     * @return
+     */
+    boolean isLoggedIn() {return loggedIn;}
 
-        // session.add(getClientComputer());
-        // session.add(getSocketInfo());
-        // session.add(getStatus());
-        // state.put("session", session);
-
-        // account.add("open");
-        // account.add("userid_archive.json");
-        // account.add("/resources");
-        // state.put("account", account);
-
-        // settings.add("all");
-        // settings.add("yes");
-        // settings.add("yes");
-        // state.put("settings", settings);
-
-        return state;
-    }
+    /**
+     * Sets UserProfile login status.
+     * 
+     * @param loggedIn
+     */
+    void setLoggedIn(boolean loggedIn) {this.loggedIn = loggedIn;}
     
 }
