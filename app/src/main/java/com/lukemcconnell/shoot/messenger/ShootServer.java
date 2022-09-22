@@ -17,41 +17,36 @@ class ShootServer {
 
     private boolean listening = false;
     private static ArrayList<ServerThread> serverThreads = new ArrayList<>();
-    static final String SERVER_INFO = "ShootServer running on " + ShootUtils.getLocalHostName() + " on domain " + ShootUtils.HOSTNAME + " listening on port " + ShootUtils.PORT;
+
+    /**
+     * ShootServer constructor.
+     * 
+     */
+    ShootServer() {listening = true;}
 
     /**
      * Returns HashMap of active ShootServerThread objects.
      * 
      * @return
      */
-    ArrayList<ServerThread> getServerThreads(){
-        return serverThreads;
-    }
-
-    /**
-     * Constructor sets instance port.
-     * 
-     */
-    ShootServer() {
-        listening = true;
-    }
+    ArrayList<ServerThread> getServerThreads() {return serverThreads;}
 
     /**
      * Toggles listening to false, cause server listen loop to exit.
      * 
      */
-    void stopListening(){listening = false;}
+    void stopListening() {listening = false;}
     
     /**
      * Returns a formatted String of current users for info output *ADD TIMESTAMP*.
      * 
      * @return
      */
-    static String connectedUsers(){
+    static String getConnectedUsers() {
         StringBuilder usernames = new StringBuilder();
         usernames.append(serverThreads.size() + " connected users: ");
-        for (ServerThread serverThread: serverThreads){
-            usernames.append(serverThread.getClientInfo()[0] + ", ");   
+        for (ServerThread serverThread: serverThreads) {
+            usernames.append(serverThread.getUserProfile().getUserInfo()[0] + ", ");   
         }
         if (usernames.length() > 2)
             usernames.replace(usernames.length()-2, usernames.length()-1, ""); //removes last ', '
@@ -59,16 +54,15 @@ class ShootServer {
     }
 
     /**
-     * Verifys each ServerThread object has a connected user.
-     * Returns ArrayList with invalid threads omitted.
+     * Verifys each ServerThread object in serverThreads
+     * has a connected user and prunes if needed.
      * 
-     * @return
      */
     static void verifyClients() {
         ArrayList<ServerThread> threadsToRemove = new ArrayList<>();
         synchronized (serverThreads) {
             for (ServerThread serverThread : serverThreads) {
-                if (!serverThread.isLoggedIn())
+                if (!serverThread.getUserProfile().isLoggedIn())
                     threadsToRemove.add(serverThread);
             }
         }
@@ -83,7 +77,7 @@ class ShootServer {
      * 
      */
     void start() {
-        System.out.println(SERVER_INFO);
+        System.out.println("Shoot Server hosted by " + ShootUtils.CONNECTION_INFO);
         try (ServerSocket serverSocket = new ServerSocket(ShootUtils.PORT)) {
             while (listening) {
                 Socket socket = serverSocket.accept();
