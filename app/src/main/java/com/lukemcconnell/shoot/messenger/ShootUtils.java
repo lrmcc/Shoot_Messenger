@@ -7,7 +7,7 @@ import java.net.InetAddress;
 class ShootUtils {
 
     private static ShootUtils shootUtils = null;
-    static final String HOSTNAME = "localhost";
+    static final String HOSTNAME = "localhost"; // update strings with builder or format i.e. "Hello, %s!"; String.format(template, name);
     static final int PORT = 5050;
     static final String SPLITMARKER = "::::";
     static final String CONNECTION_INFO = ShootUtils.getLocalHostName() + " connected to " + ShootUtils.HOSTNAME + " on port " + ShootUtils.PORT;

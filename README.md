@@ -1,19 +1,18 @@
 # Shoot Messenger
-### Status: Resumed development as of April 2022
+### Status: Resumed development as of August 2022
 
 ## Description
-This messaging application allows for users to launch a server for clients to connect to.
-A server can exist on a local internet-connected machine. 
-A client can connect to the server so long as the server's IP address is known.
+Shoot Messenger is a messaging application that has server and client components.
+A server instance is designed to be hosted on a computer in a local area network environment.
+Users can launch the client to connect to the server.
 The server will retain configuration and history in a locally.
-Clients can view server configuration, which describes encryption use and dictates how long messages are held. 
 
 ## Usage
-To allow for messaging platforms to exist temporarily or as needed. 
+A messaging platforms for LAN. 
 
 ## Installation
 Extract the app/build/distributions/app-<version>.zip then run the bin/app-<version> executable.
-From there run a server before attempting to connect a client.
+From there launch a server before attempting to connect a client.
 
 ## Roadmap
 - Refactor and shore up basic messaging
