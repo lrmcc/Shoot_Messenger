@@ -1,9 +1,4 @@
-/*
- *  Shoot Messenger 0.0.1
- *  Luke McConnell
-*/
-
-package com.lukemcconnell.shoot.messenger;
+package com.lukemcconnell.shoot.client;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

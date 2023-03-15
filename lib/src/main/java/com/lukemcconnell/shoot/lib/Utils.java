@@ -1,31 +1,31 @@
-package com.lukemcconnell.shoot.messenger;
+package com.lukemcconnell.shoot.lib;
 
 import java.util.Random;
 import java.io.BufferedReader;
 import java.net.InetAddress;
 
-class ShootUtils {
+class Utils {
 
-    private static ShootUtils shootUtils = null;
+    private static Utils Utils = null;
     static final String HOSTNAME = "localhost"; // update strings with builder or format i.e. "Hello, %s!"; String.format(template, name);
     static final int PORT = 5050;
     static final String SPLITMARKER = "::::";
-    static final String CONNECTION_INFO = ShootUtils.getLocalHostName() + " connected to " + ShootUtils.HOSTNAME + " on port " + ShootUtils.PORT;
+    static final String CONNECTION_INFO = Utils.getLocalHostName() + " connected to " + Utils.HOSTNAME + " on port " + Utils.PORT;
 
     
     /**
-     * Private ShootUtils constructor for singleton implementation.
+     * Private Utils constructor for singleton implementation.
      */
-    private ShootUtils(){}
+    private Utils(){}
     
     /**
-     * Returns singleton instance of ShootUtils.
+     * Returns singleton instance of Utils.
      * @return
      */
-    static ShootUtils getInstance() {
-        if (shootUtils == null)
-            shootUtils = new ShootUtils();
-        return shootUtils;
+    static Utils getInstance() {
+        if (Utils == null)
+            Utils = new Utils();
+        return Utils;
     }
     
     /**

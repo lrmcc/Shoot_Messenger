@@ -1,9 +1,4 @@
-/*
- *  Shoot Messenger 0.0.1
- *  Luke McConnell
-*/
-
-package com.lukemcconnell.shoot.messenger;
+package com.lukemcconnell.shoot.server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,7 +29,7 @@ class ServerThread implements Runnable {
     }
 
     /**
-     * Returns the ShootServerThread objects's socket object.
+     * Returns the ServerThread objects's socket object.
      * 
      * @return
      */
@@ -56,9 +51,9 @@ class ServerThread implements Runnable {
         clientWriter = new PrintWriter(socket.getOutputStream(), true); // outgoing to client
         serverReader = new BufferedReader(new InputStreamReader(socket.getInputStream())); //incoming from client
         userProfile.setLoggedIn(true);
-        userProfile.setUserInfo(serverReader.readLine().split(ShootUtils.SPLITMARKER));
+        userProfile.setUserInfo(serverReader.readLine().split(Utils.SPLITMARKER));
         System.out.println(userProfile.getUserInfo()[0] + " has connected to the server");
-        clientWriter.println("\nWelcome " + userProfile.getUserInfo()[0] + "!\n" + ShootUtils.CONNECTION_INFO + "\n" + ShootServer.getConnectedUsers());
+        clientWriter.println("\nWelcome " + userProfile.getUserInfo()[0] + "!\n" + Utils.CONNECTION_INFO + "\n" + Server.getConnectedUsers());
     }
 
     /**
@@ -69,7 +64,7 @@ class ServerThread implements Runnable {
     void send(String serverMessage) {clientWriter.println(serverMessage);}
 
     /**
-     * ShootServerThread main instace function.
+     * ServerThread main instace function.
      * 
      */
     public void run() {
@@ -84,10 +79,10 @@ class ServerThread implements Runnable {
             serverReader.close();
             clientWriter.close();
         } catch (IOException e) {
-            System.out.println("ShootServerThreadError");
+            System.out.println("ServerThreadError");
             e.printStackTrace(); 
         } finally {
-            ShootServer.verifyClients();
+            Server.verifyClients();
         }
     }
 }

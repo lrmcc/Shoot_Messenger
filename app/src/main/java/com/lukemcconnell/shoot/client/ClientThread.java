@@ -1,4 +1,4 @@
-package com.lukemcconnell.shoot.messenger;
+package com.lukemcconnell.shoot.client;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,7 +11,7 @@ public class ClientThread implements Runnable {
 
     /**
      * Constructor sets instance socket to the socket object 
-     * returned from ShootClient creating socket
+     * returned from Client creating socket
      * 
      * @param socket
      */

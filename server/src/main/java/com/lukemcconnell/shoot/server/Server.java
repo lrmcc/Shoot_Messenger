@@ -1,9 +1,4 @@
-/*
- *  Shoot Messenger 0.0.1
- *  Luke McConnell
-*/
-
-package com.lukemcconnell.shoot.messenger;
+package com.lukemcconnell.shoot.server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -11,21 +6,21 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 /**
- * ShootServer manages application as a server.
+ * Server class.
  */
-class ShootServer {
+class Server {
 
     private boolean listening = false;
     private static ArrayList<ServerThread> serverThreads = new ArrayList<>();
 
     /**
-     * ShootServer constructor.
+     * Server constructor.
      * 
      */
-    ShootServer() {listening = true;}
+    Server() {listening = true;}
 
     /**
-     * Returns HashMap of active ShootServerThread objects.
+     * Returns HashMap of active ServerThread objects.
      * 
      * @return
      */
@@ -73,12 +68,12 @@ class ShootServer {
     }
 
     /**
-     * ShootServer main instance function for running server.
+     * Server main instance function for running server.
      * 
      */
     void start() {
-        System.out.println("Shoot Server hosted by " + ShootUtils.CONNECTION_INFO);
-        try (ServerSocket serverSocket = new ServerSocket(ShootUtils.PORT)) {
+        System.out.println("Shoot Server hosted by " + Utils.CONNECTION_INFO);
+        try (ServerSocket serverSocket = new ServerSocket(Utils.PORT)) {
             while (listening) {
                 Socket socket = serverSocket.accept();
                 ServerThread serverThread = new ServerThread(socket);
@@ -87,7 +82,7 @@ class ShootServer {
                 serverThreads.add(serverThread);
             }
         } catch (IOException e) {
-            System.err.println("Could not listen on port " + ShootUtils.PORT);
+            System.err.println("Could not listen on port " + Utils.PORT);
             System.exit(-1);
         }
     }

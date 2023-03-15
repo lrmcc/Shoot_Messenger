@@ -3,7 +3,7 @@
  *  Luke McConnell
 */
 
-package com.lukemcconnell.shoot.messenger;
+package com.lukemcconnell.shoot.server;
 
 import java.net.*;
 
@@ -13,10 +13,10 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ServerThreadTest {
     // @Test void serverThreadLoginTest() {
     //     Socket socket = new Socket();
-    //     ShootServerThread shootServerThreadTest = new ShootServerThread(socket);
+    //     ServerThread ServerThreadTest = new ServerThread(socket);
     //     String loginStrTest = "Luke::::e70357::::Lukes-Mac-mini.local";
     //     String[] loginTestArr = {"Luke", "e70357", "Lukes-Mac-mini.local"};
-    //     assertEquals(shootServerThreadTest.login(loginStrTest)[0], loginTestArr[0]);
-    //     assertEquals(shootServerThreadTest.login(loginStrTest)[2], loginTestArr[2]);
+    //     assertEquals(ServerThreadTest.login(loginStrTest)[0], loginTestArr[0]);
+    //     assertEquals(ServerThreadTest.login(loginStrTest)[2], loginTestArr[2]);
     // }
 }
