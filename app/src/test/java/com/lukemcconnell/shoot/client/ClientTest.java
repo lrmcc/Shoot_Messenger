@@ -3,23 +3,23 @@
  *  Luke McConnell
 */
 
-package com.lukemcconnell.shoot.messenger;
+package com.lukemcconnell.shoot.client;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ShootClientTest {
+public class ClientTest {
 
-    private static ShootClient shootClientTest = new ShootClient();
+    private static Client ClientTest = new Client();
 
     // @Test
-    // void shootClientStatusTest() {
-    //     assertTrue(shootClientTest.getStatus());
+    // void ClientStatusTest() {
+    //     assertTrue(ClientTest.getStatus());
     // }
 
-    // @Test void shootClientLoginTest(){
+    // @Test void ClientLoginTest(){
     //     String[] loginTestArr = {"Luke", "e70357", "Lukes-Mac-mini.local"};
-    //     String loginStrActual = shootClientTest.login("Luke");
+    //     String loginStrActual = ClientTest.login("Luke");
     //     String[] loginStrActualArr = loginStrActual.split("::::");
     //     assertEquals(loginStrActualArr[0], loginTestArr[0]);
     //     assertEquals(loginStrActualArr[2], loginTestArr[2]);

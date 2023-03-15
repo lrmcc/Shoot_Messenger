@@ -1,5 +1,5 @@
 /*
- *  Shoot Messenger App 0.0.1
+ *  Shoot Messenger Server 0.0.1
  *  Luke McConnell
 */
 
@@ -31,13 +31,13 @@ tasks.withType<Test> {
 }
 
 application {
-    // Define the main class for the application.
-    mainClass.set("com.lukemcconnell.shoot.client.App")
+    // Define the main class for the server.
+    mainClass.set("com.lukemcconnell.shoot.server.App")
 }
 
 tasks.withType<Jar> {
     manifest {
-        attributes["Main-Class"] = "com.lukemcconnell.shoot.client.App"
+        attributes["Main-Class"] = "com.lukemcconnell.shoot.server.App"
     }
 }
 

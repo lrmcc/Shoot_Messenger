@@ -1,9 +1,4 @@
-/*
- *  Shoot Messenger 0.0.1
- *  Luke McConnell
-*/
-
-package com.lukemcconnell.shoot.messenger;
+package com.lukemcconnell.shoot.client;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,9 +8,9 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 /**
- * ShootServer manages application as a client.
+ * Client application class.
  */
-class ShootClient {
+class Client {
 
     private boolean loggedIn;
     private String username;
@@ -27,7 +22,7 @@ class ShootClient {
      * Creates client object.
      * 
      */
-    ShootClient() {
+    Client() {
         loggedIn = false;
     }
 
@@ -75,44 +70,44 @@ class ShootClient {
      */
     void init(BufferedReader stdIn, PrintWriter socketOut) {
         loggedIn = true;
-        username = ShootUtils.getInput("\nEnter a username:", stdIn);
-        userId = ShootUtils.getRandomStr();
-        userInfo = new String[]{username, userId, ShootUtils.getLocalHostName()};
-        userInfoStr = username + ShootUtils.SPLITMARKER + userId + ShootUtils.SPLITMARKER + ShootUtils.getLocalHostName();
+        username = Utils.getInput("\nEnter a username:", stdIn);
+        userId = Utils.getRandomStr();
+        userInfo = new String[]{username, userId, Utils.getLocalHostName()};
+        userInfoStr = username + Utils.SPLITMARKER + userId + Utils.SPLITMARKER + Utils.getLocalHostName();
         socketOut.println(userInfoStr);
     }
 
     /**
-     * ShootClient main instance function.
+     * Client main instance function.
      * 
      */
     void start() {
         try (
-            Socket socket = new Socket(ShootUtils.HOSTNAME, ShootUtils.PORT);
+            Socket socket = new Socket(Utils.HOSTNAME, Utils.PORT);
             BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
             PrintWriter socketOut = new PrintWriter(socket.getOutputStream(), true);
             ) {
-            System.out.println("Shoot Client launched from " + ShootUtils.CONNECTION_INFO);    
+            System.out.println("Shoot Client launched from " + Utils.CONNECTION_INFO);    
             init(stdIn, socketOut);
             ClientThread clientThread = new ClientThread(socket);
             Thread thread = new Thread(clientThread);
             thread.start();
             String userInput;
             while (loggedIn && (userInput = stdIn.readLine()) != null) {
-                System.out.println("ShootClient user sent: " + userInput);
+                System.out.println("Client user sent: " + userInput);
                 socketOut.println(userInput);
             }
         } catch (UnknownHostException e) {
-            System.err.println("Unknown host " + ShootUtils.HOSTNAME + "/n" + e);
+            System.err.println("Unknown host " + Utils.HOSTNAME + "/n" + e);
             System.exit(1);
         } catch (IOException e) {
-            System.err.println("I/O exception for the connection to " + ShootUtils.HOSTNAME + "/n" + e);
+            System.err.println("I/O exception for the connection to " + Utils.HOSTNAME + "/n" + e);
             System.exit(1);
         } 
     }
 
     void exit() {
-        System.out.println("ShootClient exiting!");
+        System.out.println("Client exiting!");
         System.exit(0);
     }
 

@@ -1,7 +1,9 @@
 /*
- *  Shoot Messenger App 0.0.1
+ *  Shoot Messenger Library 0.0.1
  *  Luke McConnell
 */
+
+// This should be altered as it is it intended to be a library.
 
 import com.adarshr.gradle.testlogger.theme.ThemeType
 
@@ -32,12 +34,12 @@ tasks.withType<Test> {
 
 application {
     // Define the main class for the application.
-    mainClass.set("com.lukemcconnell.shoot.client.App")
+    mainClass.set("com.lukemcconnell.shoot.messenger.App")
 }
 
 tasks.withType<Jar> {
     manifest {
-        attributes["Main-Class"] = "com.lukemcconnell.shoot.client.App"
+        attributes["Main-Class"] = "com.lukemcconnell.shoot.messenger.App"
     }
 }
 
