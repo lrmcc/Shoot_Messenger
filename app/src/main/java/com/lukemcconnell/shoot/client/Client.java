@@ -52,6 +52,7 @@ class Client {
     String[] getUserInfo() {
         return userInfo;
     }
+
     /**
      * Returns userInfo array formatted into string with split marker.
      * 
@@ -72,7 +73,7 @@ class Client {
         loggedIn = true;
         username = Utils.getInput("\nEnter a username:", stdIn);
         userId = Utils.getRandomStr();
-        userInfo = new String[]{username, userId, Utils.getLocalHostName()};
+        userInfo = new String[] { username, userId, Utils.getLocalHostName() };
         userInfoStr = username + Utils.SPLITMARKER + userId + Utils.SPLITMARKER + Utils.getLocalHostName();
         socketOut.println(userInfoStr);
     }
@@ -83,11 +84,10 @@ class Client {
      */
     void start() {
         try (
-            Socket socket = new Socket(Utils.HOSTNAME, Utils.PORT);
-            BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-            PrintWriter socketOut = new PrintWriter(socket.getOutputStream(), true);
-            ) {
-            System.out.println("Shoot Client launched from " + Utils.CONNECTION_INFO);    
+                Socket socket = new Socket(Utils.HOSTNAME, Utils.PORT);
+                BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
+                PrintWriter socketOut = new PrintWriter(socket.getOutputStream(), true);) {
+            System.out.println("Shoot Client launched from " + Utils.CONNECTION_INFO);
             init(stdIn, socketOut);
             ClientThread clientThread = new ClientThread(socket);
             Thread thread = new Thread(clientThread);
@@ -103,7 +103,7 @@ class Client {
         } catch (IOException e) {
             System.err.println("I/O exception for the connection to " + Utils.HOSTNAME + "/n" + e);
             System.exit(1);
-        } 
+        }
     }
 
     void exit() {

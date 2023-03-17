@@ -1,23 +1,58 @@
 # Shoot
-## An end-to-end encrypted messaging platform
-
+<font size=4>An end-to-end encrypted messaging platform</font>
+---
 ### Description
-- Shoot is an encrypted messaging platform comprised of server and client applications. The intent is for server instance operators to have complete control of messaging data beyond the reach of ISP or other entities.
-
-- A server instance is hosted on a computer connected to the internet or in a local area network environment. Each running server can retain and load configuration and history locally. 
-
+"_Shoot me a message_"
+- Shoot is an encrypted messaging platform for server instance operators to have complete control of messaging data.
+- A server instance is hosted on a computer connected to the internet or in a cloud environment.
 - Users are connected to a server by the server instance IP address and port via shoot client application.
 
 ### Installation
-  1. Extract the app/build/distributions/app-<version>.zip then run the bin/app-<version> executable.
-  2. From there launch a server before attempting to connect a client.
+  #### Method 1 - Manually build executable jar files
+  ##### Client
+  1. Clone or download the repo
+  2. Navigate to the repo directory
+  3. Open client project folder: `cd ./app`
+  4. Build client application: `gradle build`
+  5. Extract the client .zip files from app/build/distributions/app-<version>.zip.
+  
+  ##### Server
+  1. Clone or download the repo
+  2. Navigate to the repo directory
+  3. Open server project folder: `cd ../server`
+  4. Build server application: `gradle build`
+  5. Extract the server .zip file from server/build/distributions/server-boot<version>.zip.
 
-### Roadmap
+  #### Method 2 (Future) - Download executables and verify check sums
+
+### Usage
+#### Run a server instance
+  1. Launch server executable jar: `java -jar shoot-server-<version>.jar`
+  2. Change port settings and user policies if desired. (Future)
+  3. Deploy server; IP/Port posted to Shoot server list. (Future)
+#### Connect as user
+  1. Launch client executable jar: `java -jar shoot-app-<version>.jar`
+  2. Login as user. (Future)
+  3. Connect to desired server from Shoot server list. (Future)
+
+### Development Roadmap
   - Refactor and shore up basic messaging
   - Add encryption capabilities
   - Clarify useage over internet and LAN
   - Update server to retain and load data
   - User profile associated IP addressess record to retain/block  
+
+### Development Tools
+  - Java 17
+  - Spring Boot Dependencies
+    - Spring Web
+    - Spring Session  (Future)
+    - Spring for RabbitMQ
+    - Spring Session  (Future)
+    - Spring Security  (Future)
+    - WebSocket (Future)
+  - Docker (Future)
+  - Github CI/CD (Future)
 
 ### License
 MIT License
