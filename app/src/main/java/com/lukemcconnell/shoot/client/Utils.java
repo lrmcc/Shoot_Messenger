@@ -7,19 +7,22 @@ import java.net.InetAddress;
 class Utils {
 
     private static Utils Utils = null;
-    static final String HOSTNAME = "localhost"; // update strings with builder or format i.e. "Hello, %s!"; String.format(template, name);
+    static final String HOSTNAME = "localhost"; // update strings with builder or format i.e. "Hello, %s!";
+                                                // String.format(template, name);
     static final int PORT = 5050;
     static final String SPLITMARKER = "::::";
-    static final String CONNECTION_INFO = Utils.getLocalHostName() + " connected to " + Utils.HOSTNAME + " on port " + Utils.PORT;
+    static final String CONNECTION_INFO = Utils.getLocalHostName() + " connected to " + Utils.HOSTNAME + " on port "
+            + Utils.PORT;
 
-    
     /**
      * Private Utils constructor for singleton implementation.
      */
-    private Utils(){}
-    
+    private Utils() {
+    }
+
     /**
      * Returns singleton instance of Utils.
+     * 
      * @return
      */
     static Utils getInstance() {
@@ -27,7 +30,7 @@ class Utils {
             Utils = new Utils();
         return Utils;
     }
-    
+
     /**
      * Splits the string parameter.
      * 

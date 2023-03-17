@@ -10,7 +10,7 @@ public class ClientThread implements Runnable {
     private Socket socket;
 
     /**
-     * Constructor sets instance socket to the socket object 
+     * Constructor sets instance socket to the socket object
      * returned from Client creating socket
      * 
      * @param socket
@@ -25,8 +25,7 @@ public class ClientThread implements Runnable {
      */
     public void run() {
         try (
-            BufferedReader socketIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            ) {
+                BufferedReader socketIn = new BufferedReader(new InputStreamReader(socket.getInputStream()));) {
             String messengeFromServer;
             while ((messengeFromServer = socketIn.readLine()) != null) {
                 System.out.println(messengeFromServer);
@@ -36,5 +35,5 @@ public class ClientThread implements Runnable {
             e.printStackTrace();
         }
     }
-    
+
 }
